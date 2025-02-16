@@ -1,29 +1,28 @@
 "use client";
 
+import { useRouter } from "next/navigation"; // Next.js router for navigation
 import JSZip from "jszip";
 import React, { useState } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { AnalyzeWhatsapp } from "../lib/analyzeWhatsapp"; // adjust the path as needed
 
-interface ChatMessage {
-  date: string;
-  time: string;
-  sender: string;
-  message: string;
-}
-
 export function Form() {
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [error, setError] = useState("");
   const [analysis, setAnalysis] = useState<any>(null);
-
+  const [displayedMessages, setDisplayedMessages] = useState(0);
+  const router = useRouter();
+  const handleContinue = () => {
+    if (analysis) {
+      localStorage.setItem("analysisData", JSON.stringify(analysis)); // Save to local storage
+      router.push("/analysis"); // Navigate to the analysis page
+    }
+  };
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
     setError("");
-    setMessages([]);
 
     if (file.type === "text/plain") {
       readTextFile(file);
@@ -39,20 +38,32 @@ export function Form() {
     reader.onload = (e) => {
       const textContent = e.target?.result as string;
       try {
+
         // Instantiate our analyzer with the file content.
         const analyzer = new AnalyzeWhatsapp(textContent);
         // For example, get message counts per month.
-        const messagesPerMonth = analyzer.messageCountPerMonth().slice(0, 5);
+        const totalMessages = analyzer.messagesCount();
         // You can also call other methods here.
         setAnalysis({
-          totalMessages: analyzer.messagesCount(),
-          messagesPerMonth,
+          totalMessages,
+          messagesPerMonth: analyzer.messageCountPerMonth(),
           messagesPerAuthor: analyzer.messageCountPerAuthor(),
           activityByHour: analyzer.activityTimeOfDay(),
           activityByDay: analyzer.activityDayOfWeek(),
           frequentWords: analyzer.mostFreqWords().slice(0, 10), // top 10 words
           laughs: analyzer.laughsPerAuthor(),
         });
+        setDisplayedMessages(0);
+        const incrementSpeed = Math.max(10, Math.floor(totalMessages / 350)); // Adjust speed based on message count
+        const interval = setInterval(() => {
+          setDisplayedMessages((prev) => {
+            if (prev + incrementSpeed >= totalMessages) {
+              clearInterval(interval);
+              return totalMessages;
+            }
+            return prev + incrementSpeed;
+          });
+        }, 10); // Increase every 10ms for fast animation
       } catch (err) {
         setError("Error processing file.");
       }
@@ -70,28 +81,34 @@ export function Form() {
         return;
       }
 
-      const content = await zip.files[txtFileName].async("text");
-      const parsedMessages = parseWhatsAppChat(content);
-      setMessages(parsedMessages);
+      const textContent = await zip.files[txtFileName].async("text");
+      const analyzer = new AnalyzeWhatsapp(textContent);
+      // For example, get message counts per month.
+      const totalMessages = analyzer.messagesCount();
+      // You can also call other methods here.
+      setAnalysis({
+        totalMessages,
+        messagesPerMonth: analyzer.messageCountPerMonth(),
+        messagesPerAuthor: analyzer.messageCountPerAuthor(),
+        activityByHour: analyzer.activityTimeOfDay(),
+        activityByDay: analyzer.activityDayOfWeek(),
+        frequentWords: analyzer.mostFreqWords().slice(0, 10), // top 10 words
+        laughs: analyzer.laughsPerAuthor(),
+      });
+      setDisplayedMessages(0);
+      const incrementSpeed = Math.max(1, Math.floor(totalMessages / 350)); // Adjust speed based on message count
+      const interval = setInterval(() => {
+        setDisplayedMessages((prev) => {
+          if (prev + incrementSpeed >= totalMessages) {
+            clearInterval(interval);
+            return totalMessages;
+          }
+          return prev + incrementSpeed;
+        });
+      }, 10); // Increase every 10ms for fast animation
     } catch (err) {
-      console.error(err);
-      setError("Erro ao processar o arquivo ZIP.");
+      setError("Error processing file.");
     }
-  };
-
-  const parseWhatsAppChat = (textContent: string): ChatMessage[] => {
-    const messages: ChatMessage[] = [];
-    const lines = textContent.split("\n");
-
-    for (const line of lines) {
-      const match = line.match(/^(\d{1,2}\/\d{1,2}\/\d{2,4}), (\d{1,2}:\d{2}) - (.+?): (.+)$/);
-      if (match) {
-        const [, date, time, sender, message] = match;
-        messages.push({ date, time, sender, message });
-      }
-    }
-
-    return messages;
   };
 
   return (
@@ -114,31 +131,17 @@ export function Form() {
       {error && <p className="text-red-500">{error}</p>}
       <Button
         variant="outline"
-        disabled={messages.length === 0}
-        className="font-bold border-zinc-50 border-2 rounded-full"
+        disabled={analysis === null}
+        className="border-green-500 border-2 p-4 rounded-3xl"
+        // go to Analysis page sending the analysis object
+        onClick={handleContinue}
       >
         Continuar
       </Button>
 
-      {!!messages.length && (
-        <div className="border-zinc-50 border-2 p-4 rounded-3xl w-full">
-          <h2 className="font-bold">Preview</h2>
-          <div className="overflow-y-scroll max-h-60">
-            {messages.slice(0, 10).map((msg, index) => (
-              <p key={index}>
-                <b>{msg.date} {msg.time} - {msg.sender}:</b> {msg.message}
-              </p>
-            ))}
-          </div>
-          <p className="text-sm mt-2">{messages.length} mensagens processadas.</p>
-        </div>
-      )}
       {analysis && (
         <div>
-          <h3>Total Messages: {analysis.totalMessages}</h3>
-          <h4>Messages Per Month</h4>
-          <pre>{JSON.stringify(analysis.messagesPerMonth, null, 2)}</pre>
-          {/* Render additional analysis as needed */}
+          <span className="font-bold text-2xl mt-4">{displayedMessages} Mensagens analisadas</span>
         </div>
       )}
     </div>
