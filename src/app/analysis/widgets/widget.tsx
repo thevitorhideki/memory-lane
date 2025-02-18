@@ -1,20 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
 import "./widget.css";
-import {
-    ResponsiveContainer,
-    BarChart,
-    Bar,
-    XAxis,
-    YAxis,
-    CartesianGrid,
-    Tooltip,
-    Legend,
-    PieChart,
-    Pie,
-    Cell,
-} from "recharts";
 interface WidgetProps {
     spanx: number;
     spany: number;
@@ -24,8 +10,6 @@ interface WidgetProps {
 
 }
 export default function Widget({ spanx, spany, children, title, description }: WidgetProps) {
-
-
 
     return (
         <div className="widget" style={{
@@ -37,6 +21,7 @@ export default function Widget({ spanx, spany, children, title, description }: W
                 <h2>{title}</h2>
                 <p>{description}</p>
             </div>
+
 
 
             {children}

@@ -11,7 +11,6 @@ import "./page.css";
 
 export default function AnalysisPage() {
   const [analysisData, setAnalysisData] = useState<any>(null);
-  const [displayedMessages, setDisplayedMessages] = useState<number>(0);
   const router = useRouter();
 
   useEffect(() => {
@@ -30,20 +29,89 @@ export default function AnalysisPage() {
       </div>
     );
   }
-  return (
-    < main className="canvas" style={{
-      gridTemplateColumns: "repeat(6, 1fr)",  // 6 columns
-      gridTemplateRows: "repeat(6, 1fr)",     // 6 rows
-      gap: "25px",                            // 25px gap between widgets
 
-    }}>
-      <Widget spanx={6} spany={1} />
+  return (
+    <main
+      className="canvas"
+      style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(6, 1fr)",
+        gridAutoRows: "minmax(150px, auto)",
+        gap: "25px",
+        padding: "20px",
+      }}
+    >
+      {/* Header widget with summary */}
+      <Widget spanx={6} spany={1} title="WhatsApp Analysis" description="">
+        <div style={{ fontSize: "20px", textAlign: "center" }}>
+          Total Messages: {analysisData.totalMessages}
+        </div>
+      </Widget>
+
+      {/* Messages per Author (Pie Chart) */}
       <Widget spanx={2} spany={1} title="Messages Per Author" description="">
-        <PieChartWidget data={analysisData.messagesPerAuthor} dataKey={"count"} nameKey={"author"} />
+        <PieChartWidget
+          data={analysisData.messagesPerAuthor}
+          dataKey="count"
+          nameKey="author"
+        />
       </Widget>
-      <Widget spanx={2} spany={1} title="Messages Per Month" description="">
-        <LineChartWidget data={analysisData.messagesPerMonth} dataKey={"count"} nameKey={"month"} grid={false} yaxis={true} xaxis={true} />
+
+      {/* Messages per Month (Line Chart) */}
+      <Widget spanx={4} spany={1} title="Messages Per Month" description="">
+        <LineChartWidget
+          data={analysisData.messagesPerMonth}
+          dataKey="count"
+          nameKey="month"
+          grid={true}
+          xaxis={true}
+          yaxis={true}
+        />
       </Widget>
-    </main >
+
+      {/* Activity Time of Day (Bar Chart) */}
+      
+      <Widget spanx={3} spany={2} title="Activity Time of Day" description="">
+        <BarChartWidget
+          data={analysisData.activityByHour}
+          dataKey="count"
+          nameKey="hour"
+          grid={false}
+          xaxis={true}
+          yaxis={true}
+          tooltip={true}
+          legend={false}
+        />
+      </Widget>
+
+      {/* Activity Day of Week (Bar Chart) */}
+      <Widget spanx={3} spany={1} title="Activity Day of Week" description="">
+        <BarChartWidget
+          data={analysisData.activityByDay}
+          dataKey="count"
+          nameKey="day"
+          grid={true}
+          xaxis={true}
+          yaxis={true}
+          tooltip={true}
+          legend={false}
+        />
+      </Widget>
+
+      {/* Laughs Per Author (Bar Chart) */}
+      <Widget spanx={3} spany={1} title="Laughs Per Author" description="">
+        <BarChartWidget
+          data={analysisData.laughs}
+          dataKey="laugh_count"
+          nameKey="author"
+          grid={true}
+          xaxis={true}
+          yaxis={true}
+          tooltip={true}
+          legend={false}
+        />
+      </Widget>
+
+    </main>
   );
 }
