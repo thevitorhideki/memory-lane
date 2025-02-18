@@ -45,30 +45,44 @@ export interface ChatMessage {
     // Parse the WhatsApp text content into an array of ChatMessage objects.
     private parseWhatsappContent(textContent: string): ChatMessage[] {
       const messages: ChatMessage[] = [];
-      // Regex pattern to match lines like:
-      // [dd/mm/yy, hh:mm:ss] Author: Message
-      const pattern = /\[(\d{2}\/\d{2}\/\d{2}),?\s(\d{2}:\d{2}:\d{2})\]\s(.*?):\s(.+)/g;
+      
+      // Define both patterns
+      const bracketPattern = /\[(\d{2}\/\d{2}\/\d{2}),?\s(\d{2}:\d{2}:\d{2})\]\s(.*?):\s(.+)/g;
+      const nonBracketPattern = /(\d{1,2}\/\d{1,2}\/\d{2}),\s(\d{1,2}:\d{2})\s-\s(.*?):\s(.+)/g;
+      
+      // Decide which pattern to use based on whether the text starts with '['
+      const trimmedText = textContent.trim();
+      const pattern = trimmedText.startsWith("[") ? bracketPattern : nonBracketPattern;
+      
       let match: RegExpExecArray | null;
-  
+      
       while ((match = pattern.exec(textContent)) !== null) {
         const [_, dateStr, timeStr, author, messageRaw] = match;
+        
         // Remove the "<This message was edited>" text if present.
         const message = messageRaw.replace("<This message was edited>", "").trim();
-  
-        // Parse the date (dd/mm/yy) and time (hh:mm:ss)
+        
+        // Parse the date (d/m/yy or dd/mm/yy) and adjust the year.
         const [day, month, yearStr] = dateStr.split("/");
-        const year = parseInt(yearStr, 10) + (parseInt(yearStr, 10) < 50 ? 2000 : 1900); // Heuristic for two-digit years
+        const year = parseInt(yearStr, 10) + (parseInt(yearStr, 10) < 50 ? 2000 : 1900);
         const monthIndex = parseInt(month, 10) - 1;
-        const [hour, minute, second] = timeStr.split(":").map((v) => parseInt(v, 10));
-        const datetime = new Date(year, monthIndex, parseInt(day, 10), hour, minute, second);
-  
+        
+        let datetime: Date;
+        // If using the bracket pattern, expect hh:mm:ss; otherwise hh:mm (assume seconds = 0)
+        if (pattern === bracketPattern) {
+          const [hour, minute, second] = timeStr.split(":").map((v) => parseInt(v, 10));
+          datetime = new Date(year, monthIndex, parseInt(day, 10), hour, minute, second);
+        } else {
+          const [hour, minute] = timeStr.split(":").map((v) => parseInt(v, 10));
+          datetime = new Date(year, monthIndex, parseInt(day, 10), hour, minute, 0);
+        }
+        
         const type = this.detectType(message);
-  
         // Only keep text messages
         if (type !== "text") {
           continue;
         }
-  
+        
         messages.push({
           datetime,
           author,
@@ -78,6 +92,7 @@ export interface ChatMessage {
           timeStr,
         });
       }
+      
       return messages;
     }
   
