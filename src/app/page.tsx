@@ -1,5 +1,6 @@
-import { Form } from "@/components/Form";
-import { How } from "./how";
+import { Form } from '@/components/Form';
+import { How } from './how';
+import { Why } from './why';
 
 export default async function Home() {
   return (
@@ -26,9 +27,7 @@ export default async function Home() {
           compartilhe com o seu <b className="text-red-500">amor</b>
         </h1>
 
-        <div className="mt-20">
-          <p>colocar exemplos</p>
-        </div>
+        <Why />
       </section>
 
       <How />

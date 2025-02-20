@@ -1,26 +1,24 @@
-"use client";
+'use client';
 
-import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import Widget from "./widgets/widget";
-import PieChartWidget from "./widgets/pieChart";
-import BarChartWidget from "./widgets/barChart";
-import LineChartWidget from "./widgets/lineChart";
-
-import "./page.css";
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import BarChartWidget from './widgets/barChart';
+import LineChartWidget from './widgets/lineChart';
+import PieChartWidget from './widgets/pieChart';
+import Widget from './widgets/widget';
 
 export default function AnalysisPage() {
   const [analysisData, setAnalysisData] = useState<any>(null);
   const router = useRouter();
 
   useEffect(() => {
-    const storedData = localStorage.getItem("analysisData");
+    const storedData = localStorage.getItem('analysisData');
     if (!storedData) {
-      router.push("/");
+      router.push('/');
       return;
     }
     setAnalysisData(JSON.parse(storedData));
-  }, []);
+  }, [router]);
 
   if (!analysisData) {
     return (
@@ -32,18 +30,15 @@ export default function AnalysisPage() {
 
   return (
     <main
-      className="canvas"
+      className="grid gap-6 p-5"
       style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(6, 1fr)",
-        gridAutoRows: "minmax(150px, auto)",
-        gap: "25px",
-        padding: "20px",
+        gridTemplateColumns: 'repeat(6, 1fr)',
+        gridAutoRows: 'minmax(150px, auto)',
       }}
     >
       {/* Header widget with summary */}
       <Widget spanx={6} spany={1} title="WhatsApp Analysis" description="">
-        <div style={{ fontSize: "20px", textAlign: "center" }}>
+        <div style={{ fontSize: '20px', textAlign: 'center' }}>
           Total Messages: {analysisData.totalMessages}
         </div>
       </Widget>
@@ -70,7 +65,7 @@ export default function AnalysisPage() {
       </Widget>
 
       {/* Activity Time of Day (Bar Chart) */}
-      
+
       <Widget spanx={3} spany={2} title="Activity Time of Day" description="">
         <BarChartWidget
           data={analysisData.activityByHour}
@@ -111,7 +106,6 @@ export default function AnalysisPage() {
           legend={false}
         />
       </Widget>
-
     </main>
   );
 }

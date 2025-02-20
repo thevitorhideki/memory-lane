@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import clsx from "clsx";
+import clsx from 'clsx';
 import {
   ArrowDownCircle,
   ArrowLeft,
@@ -9,22 +9,22 @@ import {
   CheckCheck,
   MoreVertical,
   Search,
-} from "lucide-react";
-import { useState } from "react";
+} from 'lucide-react';
+import { useState } from 'react';
 
 export function How() {
-  const [mobileType, setMobileType] = useState("ios");
+  const [mobileType, setMobileType] = useState('ios');
   const [step, setStep] = useState(0);
 
   const handlePreviousStep = () => {
     if (step != 0) {
-      setStep((prev) => prev - 1);
+      setStep((prev: number) => prev - 1);
     }
   };
 
   const handleNextStep = () => {
     if (step != 3) {
-      setStep((prev) => prev + 1);
+      setStep((prev: number) => prev + 1);
     }
   };
 
@@ -36,24 +36,24 @@ export function How() {
       <h1 className="text-4xl mt-10">Como baixar o histórico da conversa</h1>
       <div className="flex gap-8 text-xl mt-6">
         <p
-          onClick={() => setMobileType("ios")}
-          className={clsx("cursor-pointer", {
-            "font-bold underline": mobileType == "ios",
+          onClick={() => setMobileType('ios')}
+          className={clsx('cursor-pointer', {
+            'font-bold underline': mobileType == 'ios',
           })}
         >
           IOS
         </p>
         <p
-          className={clsx("cursor-pointer", {
-            "font-bold underline": mobileType == "android",
+          className={clsx('cursor-pointer', {
+            'font-bold underline': mobileType == 'android',
           })}
-          onClick={() => setMobileType("android")}
+          onClick={() => setMobileType('android')}
         >
           Android
         </p>
       </div>
 
-      {mobileType == "ios" ? (
+      {mobileType == 'ios' ? (
         <h1></h1>
       ) : (
         <div className="flex flex-1 w-full justify-center gap-8 my-20">
@@ -84,7 +84,7 @@ export function How() {
               <div className="flex gap-2 items-center self-start flex-1">
                 <ArrowLeft />
                 <h2 className="text-xl">
-                  Entre na conversa com o seu{" "}
+                  Entre na conversa com o seu{' '}
                   <b className="text-red-500">amor</b>
                 </h2>
               </div>
@@ -158,7 +158,7 @@ export function How() {
           {step == 3 && (
             <div className="flex flex-1 justify-center items-center">
               <h1 className="text-4xl w-3/5 text-center">
-                Agora basta entrar no seu{" "}
+                Agora basta entrar no seu{' '}
                 <b className="text-green-500">WhatsApp</b> pelo computador e
                 baixar o arquivo que você enviou
               </h1>
@@ -171,12 +171,12 @@ export function How() {
         <ArrowUpCircle
           size={28}
           onClick={handlePreviousStep}
-          color={step == 0 ? "transparent" : "white"}
+          color={step == 0 ? 'transparent' : 'white'}
         />
         <ArrowDownCircle
           size={28}
           onClick={handleNextStep}
-          color={step == 3 ? "transparent" : "white"}
+          color={step == 3 ? 'transparent' : 'white'}
         />
       </div>
     </section>
