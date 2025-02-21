@@ -5,7 +5,7 @@ import { Why } from './why';
 export default async function Home() {
   return (
     <main>
-      <section className="flex max-w-screen-xl m-auto h-screen justify-center items-center">
+      <section className="flex max-w-(--breakpoint-xl) m-auto h-screen justify-center items-center">
         <h1 className="text-8xl font-serif w-2/3">
           Faça uma
           <br />
@@ -19,7 +19,7 @@ export default async function Home() {
 
       <section
         id="why"
-        className="flex max-w-screen-xl m-auto h-screen items-center flex-col"
+        className="flex max-w-(--breakpoint-xl) m-auto h-screen items-center flex-col"
       >
         <h1 className="text-6xl text-center font-serif mt-16">
           Analise a sua conversa do <b className="text-green-500">WhatsApp</b> e
