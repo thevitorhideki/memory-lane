@@ -1,7 +1,8 @@
 'use client';
 
-import { Bar, BarChart, XAxis } from 'recharts';
+import { Bar, BarChart, ResponsiveContainer, XAxis } from 'recharts';
 
+import { InfoCard } from '@/components/InfoCard';
 import {
   ChartConfig,
   ChartContainer,
@@ -70,35 +71,37 @@ const chartConfig = {
 export function Why() {
   return (
     <div
-      className="mt-8 grid gap-6 items-start"
+      className="mt-8 w-full grid gap-6 justify-center"
       style={{
-        gridTemplateColumns: 'repeat(6, 1fr)',
-        gridAutoRows: 'minmax(150px, auto)',
+        gridTemplateColumns: 'repeat(6, 175px)',
+        gridTemplateRows: 'repeat(4, auto)',
       }}
     >
-      <Widget width={2} height={2} title="Mensagens por mês">
-        <ChartContainer config={chartConfig} className="h-[200px] w-full">
-          <BarChart accessibilityLayer data={chartData}>
-            <XAxis
-              dataKey="month"
-              tickLine={false}
-              tickMargin={10}
-              axisLine={false}
-              tickFormatter={(value) => value.slice(0, 3)}
-            />
-            <ChartTooltip content={<ChartTooltipContent />} />
-            <ChartLegend content={<ChartLegendContent />} />
-            <Bar dataKey="you" fill="var(--color-you)" radius={4} />
-            <Bar dataKey="love" fill="var(--color-love)" radius={4} />
-          </BarChart>
+      <Widget width={3} height={2} title="Mensagens por mês">
+        <ChartContainer config={chartConfig} className="w-full">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart accessibilityLayer data={chartData}>
+              <XAxis
+                dataKey="month"
+                tickLine={false}
+                tickMargin={10}
+                axisLine={false}
+                tickFormatter={(value) => value.slice(0, 3)}
+              />
+              <ChartTooltip content={<ChartTooltipContent />} />
+              <ChartLegend content={<ChartLegendContent />} />
+              <Bar dataKey="you" fill="var(--color-you)" radius={4} />
+              <Bar dataKey="love" fill="var(--color-love)" radius={4} />
+            </BarChart>
+          </ResponsiveContainer>
         </ChartContainer>
       </Widget>
 
-      <Widget width={3} height={2} title="Palavras mais faladas">
-        <ChartContainer config={chartConfig} className="h-[350px] w-full">
-          <WordCloud words={words} />
-        </ChartContainer>
+      <Widget width={3} height={3} title="Palavras mais faladas">
+        <WordCloud words={words} />
       </Widget>
+
+      <InfoCard width={2} height={1} title="Quantas mensagens cada um mandou" />
     </div>
   );
 }

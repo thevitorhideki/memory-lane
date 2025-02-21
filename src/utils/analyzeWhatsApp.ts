@@ -144,6 +144,7 @@ export class AnalyzeWhatsApp {
   private jsonize(
     data: { [key: string]: number },
     labels: [string, string] = ['key', 'count']
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ): any[] {
     return Object.entries(data).map(([key, count]) => ({
       [labels[0]]: key,

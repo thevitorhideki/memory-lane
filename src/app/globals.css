@@ -7,7 +7,7 @@
 @theme {
   --color-red-500: #ff4949;
 
-  --color-green-500: #49ff49;
+  --color-green-500: #0CC143;
 
   --color-background: hsl(var(--background));
   --color-foreground: hsl(var(--foreground));
