@@ -7,7 +7,7 @@ import {
 
 interface Word {
   text: string;
-  frequency: number;
+  count: number;
 }
 
 interface WordCloudProps {
@@ -19,7 +19,7 @@ export function WordCloud({ words }: WordCloudProps) {
   if (words.length === 0) return null;
 
   // Ordena as palavras de forma decrescente (maior frequência primeiro)
-  const sortedWords = [...words].sort((a, b) => b.frequency - a.frequency);
+  const sortedWords = [...words].sort((a, b) => b.count - a.count);
   const n = sortedWords.length;
   const orderedWords: Word[] = new Array(n);
   const mid = Math.floor(n / 2);
@@ -32,15 +32,15 @@ export function WordCloud({ words }: WordCloudProps) {
   });
 
   // Define a menor e a maior frequência para calcular os tamanhos
-  const frequencies = words.map((word) => word.frequency);
-  const maxFrequency = Math.max(...frequencies);
-  const minFrequency = Math.min(...frequencies);
+  const frequencies = words.map((word) => word.count);
+  const maxcount = Math.max(...frequencies);
+  const mincount = Math.min(...frequencies);
 
   // Função para mapear a frequência em um tamanho de fonte (em rem)
-  const getFontSize = (frequency: number) => {
+  const getFontSize = (count: number) => {
     // Exemplo: tamanho mínimo 1rem e máximo 3rem
-    if (maxFrequency === minFrequency) return 2; // evita divisão por zero
-    return 1 + ((frequency - minFrequency) / (maxFrequency - minFrequency)) * 2;
+    if (maxcount === mincount) return 2; // evita divisão por zero
+    return 1 + ((count - mincount) / (maxcount - mincount)) * 2;
   };
 
   const getRandomColor = () => {
@@ -69,14 +69,14 @@ export function WordCloud({ words }: WordCloudProps) {
               <span
                 className={`font-bold ${getRandomColor()}`}
                 style={{
-                  fontSize: `${getFontSize(word.frequency)}rem`,
+                  fontSize: `${getFontSize(word.count)}rem`,
                 }}
               >
                 {word.text}
               </span>
             </TooltipTrigger>
             <TooltipContent>
-              <p>{word.frequency} vezes</p>
+              <p>{word.count} vezes</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>

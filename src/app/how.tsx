@@ -58,7 +58,12 @@ export function How() {
           {step == 0 && (
             <>
               <div className="flex-1 flex justify-end">
-                <div className="border-2 h-full w-80 p-6 rounded-3xl flex flex-col gap-4">
+                <div
+                  className="border-2 h-full w-80 p-6 bg-zinc-100 rounded-3xl flex flex-col gap-4"
+                  style={{
+                    boxShadow: 'rgba(139, 139, 139, 0.35) 0px 0px 5px',
+                  }}
+                >
                   <p className="font-bold">WhatsApp</p>
                   <div className="border-2 w-full py-2 px-4 rounded-full text-sm h-8"></div>
                   <div className="flex items-center gap-3 w-full">
@@ -91,13 +96,19 @@ export function How() {
           {step == 1 && (
             <>
               <div className="flex-1 flex justify-end">
-                <div className="border-2 h-full w-80 p-6 rounded-3xl flex flex-col gap-4">
-                  <div className="flex items-center justify-between w-full">
-                    <div className="flex items-center gap-3">
-                      <div className="rounded-full bg-zinc-500 min-w-8 min-h-8"></div>
-                      <p className="font-bold">Amor ❤️</p>
-                    </div>
-                    <MoreVertical size={20} />
+                <div
+                  className="border-2 h-full w-80 p-6 rounded-3xl flex flex-col gap-4 bg-zinc-100 justify-between"
+                  style={{
+                    boxShadow: 'rgba(139, 139, 139, 0.35) 0px 0px 5px',
+                  }}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="rounded-full bg-zinc-500 min-w-8 min-h-8"></div>
+                    <p className="font-bold">Amor ❤️</p>
+                  </div>
+
+                  <div className="bg-zinc-50 rounded-md px-4 py-2">
+                    <p className="text-green-500">Exportar conversa</p>
                   </div>
                 </div>
               </div>
@@ -105,13 +116,14 @@ export function How() {
               <div className="flex flex-col gap-6 self-start flex-1">
                 <div className="flex gap-2 items-center">
                   <ArrowLeft />
-                  <h2 className="text-xl">Clique no ícone</h2>
-                  <MoreVertical size={20} />
+                  <h2 className="text-xl">
+                    Clique no nome do seu <b className="text-red-500">amor</b>
+                  </h2>
                 </div>
 
                 <div className="flex gap-2">
                   <ArrowRight />
-                  <h2 className="text-xl">Mais (última opção)</h2>
+                  <h2 className="text-xl">Desça até o final da página</h2>
                 </div>
 
                 <div className="flex gap-2">
@@ -129,7 +141,12 @@ export function How() {
           {step == 2 && (
             <>
               <div className="flex-1 flex justify-end">
-                <div className="border-2 h-full w-80 p-6 rounded-3xl flex flex-col gap-4">
+                <div
+                  className="border-2 h-full w-80 p-6 bg-zinc-100 rounded-3xl flex flex-col gap-4"
+                  style={{
+                    boxShadow: 'rgba(139, 139, 139, 0.35) 0px 0px 5px',
+                  }}
+                >
                   <div className="flex items-center justify-between w-full">
                     <h2 className="font-bold">Enviar para...</h2>
                     <Search size={20} />
@@ -168,7 +185,12 @@ export function How() {
           {step == 0 && (
             <>
               <div className="flex-1 flex justify-end">
-                <div className="border-2 h-full w-80 p-6 rounded-3xl flex flex-col gap-4">
+                <div
+                  className="border-2 h-full w-80 p-6 bg-zinc-100 rounded-3xl flex flex-col gap-4"
+                  style={{
+                    boxShadow: 'rgba(139, 139, 139, 0.35) 0px 0px 5px',
+                  }}
+                >
                   <p className="font-bold">WhatsApp</p>
                   <div className="border-2 w-full py-2 px-4 rounded-full text-sm h-8"></div>
                   <div className="flex items-center gap-3 w-full">
@@ -201,7 +223,12 @@ export function How() {
           {step == 1 && (
             <>
               <div className="flex-1 flex justify-end">
-                <div className="border-2 h-full w-80 p-6 rounded-3xl flex flex-col gap-4">
+                <div
+                  className="border-2 h-full w-80 p-6 bg-zinc-100 rounded-3xl flex flex-col gap-4"
+                  style={{
+                    boxShadow: 'rgba(139, 139, 139, 0.35) 0px 0px 5px',
+                  }}
+                >
                   <div className="flex items-center justify-between w-full">
                     <div className="flex items-center gap-3">
                       <div className="rounded-full bg-zinc-500 min-w-8 min-h-8"></div>
@@ -239,7 +266,12 @@ export function How() {
           {step == 2 && (
             <>
               <div className="flex-1 flex justify-end">
-                <div className="border-2 h-full w-80 p-6 rounded-3xl flex flex-col gap-4">
+                <div
+                  className="border-2 h-full w-80 p-6 bg-zinc-100 rounded-3xl flex flex-col gap-4"
+                  style={{
+                    boxShadow: 'rgba(139, 139, 139, 0.35) 0px 0px 5px',
+                  }}
+                >
                   <div className="flex items-center justify-between w-full">
                     <h2 className="font-bold">Enviar para...</h2>
                     <Search size={20} />

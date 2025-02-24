@@ -2,11 +2,13 @@ interface InfoCardProps {
   title: string;
   width: number;
   height: number;
+  info: { author: string; count: number }[];
 }
 
 // Função para gerar uma cor aleatória em tons pastel
 
-export function InfoCard({ title, width, height }: InfoCardProps) {
+export function InfoCard({ title, width, height, info }: InfoCardProps) {
+  console.log(info);
   const getRandomColor = () => {
     const colors = [
       { bg: 'bg-red-200', text: 'text-red-700', subtext: 'text-red-600' },
@@ -43,7 +45,7 @@ export function InfoCard({ title, width, height }: InfoCardProps) {
 
   return (
     <div
-      className={`flex flex-col gap-3 p-4 rounded-xl ${colors.bg}`}
+      className={`flex flex-col gap-3 p-4 rounded-xl justify-center ${colors.bg}`}
       style={{
         gridColumn: `span ${width}`,
         gridRow: `span ${height}`,
@@ -55,13 +57,13 @@ export function InfoCard({ title, width, height }: InfoCardProps) {
 
       <div className={`flex justify-between ${colors.subtext}`}>
         <div>
-          <h2 className="text-lg">Você</h2>
-          <p className="text-4xl font-bold">321</p>
+          <h2 className="text-lg">{info[0].author}</h2>
+          <p className="text-4xl font-bold">{info[0].count}</p>
         </div>
 
         <div className="text-right">
-          <h2 className="text-lg">Seu amor</h2>
-          <p className="text-4xl font-bold">402</p>
+          <h2 className="text-lg">{info[1].author}</h2>
+          <p className="text-4xl font-bold">{info[1].count}</p>
         </div>
       </div>
     </div>

@@ -1,3 +1,5 @@
+import { por, removeStopwords } from 'stopword';
+
 export interface ChatMessage {
   datetime: Date;
   author: string;
@@ -14,7 +16,7 @@ export interface AnalyzedData {
   activityByHour: { hour: string; count: number }[];
   activityByDay: { day: string; count: number }[];
   frequentWords: { word: string; count: number }[];
-  laughs: { author: string; laugh_count: number }[];
+  laughs: { author: string; count: number }[];
 }
 
 export class AnalyzeWhatsApp {
@@ -30,37 +32,58 @@ export class AnalyzeWhatsApp {
     if (msgLower.startsWith('location: https://maps.google.com/'))
       return 'location';
     if (msgLower.includes('video call')) return 'video call';
+    if (msgLower.includes('ligação de vídeo')) return 'video call';
+
     if (msgLower.includes('voice call')) return 'voice call';
+    if (msgLower.includes('ligação de voz')) return 'voice call';
+
     if (msgLower.includes('group call')) return 'group call';
+    if (msgLower.includes('ligação em grupo')) return 'group call';
+
     if (msgLower.includes('contact card omitted')) return 'contact';
+    if (msgLower.includes('cartão do contato omitido')) return 'contact';
+
+    if (msgLower.startsWith('null')) return 'media';
+    if (msgLower.includes('<media omitted>')) return 'media';
+
     if (msgLower.includes('sticker omitted')) return 'sticker';
+    if (msgLower.includes('figurinha omitida')) return 'sticker';
+
     if (msgLower.includes('gif omitted')) return 'gif';
+    if (msgLower.includes('gif omitido')) return 'gif';
+
     if (msgLower.includes('image omitted')) return 'image';
+    if (msgLower.includes('imagem ocultada')) return 'image';
+
     if (msgLower.includes('video omitted')) return 'video';
+    if (msgLower.includes('vídeo omitido')) return 'video';
+
     if (
       msgLower.includes('audio omitted') ||
       msgLower.endsWith('.m4a document omitted')
     )
       return 'audio';
+    if (
+      msgLower.includes('áudio ocultado') ||
+      msgLower.endsWith('.m4a document omitted')
+    )
+      return 'audio';
+
     if (msgLower.includes('document omitted')) return 'document';
+    if (msgLower.includes('documento omitido')) return 'document';
+
     if (msgLower.includes('pinned a message')) return 'pinned message';
+
     if (msgLower.startsWith('poll:')) return 'poll';
+
     if (
       msgLower.includes('this message was deleted') ||
       msgLower.includes('you deleted this message')
     )
       return 'deleted message';
-    if (
-      msgLower.includes('turned on disappearing messages') ||
-      msgLower.includes('turned off disappearing messages')
-    )
-      return 'disappearing message notification';
-    if (msgLower.includes('messages and calls are end-to-end encrypted'))
-      return 'encryption notice';
-    if (msgLower.includes('only messages that mention @meta ai'))
-      return 'meta ai notice';
-    if (msgLower.endsWith('<this message was edited>')) return 'text'; // Edited text message
-    return 'text'; // Default to text if no other match
+    if (msgLower.includes('mensagem apagada')) return 'deleted message';
+
+    return 'text';
   }
 
   // Parse the WhatsApp text content into an array of ChatMessage objects.
@@ -69,7 +92,7 @@ export class AnalyzeWhatsApp {
 
     // Define both patterns
     const bracketPattern =
-      /\[(\d{2}\/\d{2}\/\d{2}),?\s(\d{2}:\d{2}:\d{2})\]\s(.*?):\s(.+)/g;
+      /\[(\d{2}\/\d{2}\/\d{2,4}),?\s(\d{2}:\d{2}:\d{2})\]\s(.*?):\s(.+)/g;
     const nonBracketPattern =
       /(\d{1,2}\/\d{1,2}\/\d{2}),\s(\d{1,2}:\d{2})\s-\s(.*?):\s(.+)/g;
 
@@ -83,7 +106,6 @@ export class AnalyzeWhatsApp {
 
     while ((match = pattern.exec(textContent)) !== null) {
       const [, dateStr, timeStr, author, messageRaw] = match;
-
       // Remove the "<This message was edited>" text if present.
       const message = messageRaw
         .replace('<This message was edited>', '')
@@ -91,8 +113,7 @@ export class AnalyzeWhatsApp {
 
       // Parse the date (d/m/yy or dd/mm/yy) and adjust the year.
       const [day, month, yearStr] = dateStr.split('/');
-      const year =
-        parseInt(yearStr, 10) + (parseInt(yearStr, 10) < 50 ? 2000 : 1900);
+      const year = (parseInt(yearStr) < 100 ? 20 : '') + yearStr;
       const monthIndex = parseInt(month, 10) - 1;
 
       let datetime: Date;
@@ -102,7 +123,7 @@ export class AnalyzeWhatsApp {
           .split(':')
           .map((v) => parseInt(v, 10));
         datetime = new Date(
-          year,
+          parseInt(year),
           monthIndex,
           parseInt(day, 10),
           hour,
@@ -112,7 +133,7 @@ export class AnalyzeWhatsApp {
       } else {
         const [hour, minute] = timeStr.split(':').map((v) => parseInt(v, 10));
         datetime = new Date(
-          year,
+          parseInt(year),
           monthIndex,
           parseInt(day, 10),
           hour,
@@ -213,13 +234,23 @@ export class AnalyzeWhatsApp {
   // Return the most frequently occurring words across all messages.
   public mostFreqWords(): { word: string; count: number }[] {
     const counts: { [word: string]: number } = {};
+
     this.messages.forEach((msg) => {
       // Split the message into words based on non-word characters and filter out empties.
-      const words = msg.message.toLowerCase().split(/\W+/).filter(Boolean);
+      let words = msg.message
+        .toLowerCase()
+        .replace(/[?!\,\.]/g, '')
+        .split(' ')
+        .filter(Boolean);
+
+      // Remove stop words em português
+      words = removeStopwords(words, por);
+
       words.forEach((word) => {
         counts[word] = (counts[word] || 0) + 1;
       });
     });
+
     const sortedEntries = Object.entries(counts).sort((a, b) => b[1] - a[1]);
     return sortedEntries.map(([word, count]) => ({ word, count }));
   }
@@ -242,7 +273,7 @@ export class AnalyzeWhatsApp {
   }
 
   // Count the number of "laugh" patterns (e.g. "hahaha" or "kkk") per author.
-  public laughsPerAuthor(): { author: string; laugh_count: number }[] {
+  public laughsPerAuthor(): { author: string; count: number }[] {
     const counts: { [author: string]: number } = {};
     this.messages.forEach((msg) => {
       const haMatches = msg.message.match(/(?:ha){2,}/gi);
@@ -251,7 +282,7 @@ export class AnalyzeWhatsApp {
         (haMatches ? haMatches.length : 0) + (kMatches ? kMatches.length : 0);
       counts[msg.author] = (counts[msg.author] || 0) + count;
     });
-    return this.jsonize(counts, ['author', 'laugh_count']);
+    return this.jsonize(counts, ['author', 'count']);
   }
 
   // Calculate the average length of laugh expressions per author for "ha" and "k" laughs.

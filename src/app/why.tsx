@@ -15,37 +15,37 @@ import { Widget } from '@/components/Widget';
 import { WordCloud } from '@/components/WordCloud';
 
 const words = [
-  { text: 'Amor', frequency: 50 },
-  { text: 'Saudade', frequency: 40 },
-  { text: 'Felicidade', frequency: 35 },
-  { text: 'Beijo', frequency: 45 },
-  { text: 'Abraço', frequency: 38 },
-  { text: 'Sair', frequency: 30 },
-  { text: 'Carinho', frequency: 42 },
-  { text: 'Te amo', frequency: 37 },
-  { text: 'Companhia', frequency: 25 },
-  { text: 'Sintonia', frequency: 28 },
-  { text: 'Parceria', frequency: 32 },
-  { text: 'Casal', frequency: 27 },
-  { text: 'Paixão', frequency: 34 },
-  { text: 'Momentos', frequency: 29 },
-  { text: 'Conexão', frequency: 26 },
-  { text: 'Coração', frequency: 30 },
-  { text: 'Eterno', frequency: 16 },
-  { text: 'Compromisso', frequency: 14 },
-  { text: 'Almoço', frequency: 12 },
-  { text: 'Filme', frequency: 23 },
-  { text: 'Netflix', frequency: 19 },
-  { text: 'Bom dia', frequency: 40 },
-  { text: 'Boa noite', frequency: 38 },
-  { text: 'Presente', frequency: 13 },
-  { text: 'Chamego', frequency: 18 },
-  { text: 'Música', frequency: 20 },
-  { text: 'Parabéns', frequency: 11 },
-  { text: 'Saúde', frequency: 9 },
-  { text: 'Planos', frequency: 14 },
-  { text: 'Casamento', frequency: 8 },
-  { text: 'Filhos', frequency: 7 },
+  { text: 'Amor', count: 50 },
+  { text: 'Saudade', count: 40 },
+  { text: 'Felicidade', count: 35 },
+  { text: 'Beijo', count: 45 },
+  { text: 'Abraço', count: 38 },
+  { text: 'Sair', count: 30 },
+  { text: 'Carinho', count: 42 },
+  { text: 'Te amo', count: 37 },
+  { text: 'Companhia', count: 25 },
+  { text: 'Sintonia', count: 28 },
+  { text: 'Parceria', count: 32 },
+  { text: 'Casal', count: 27 },
+  { text: 'Paixão', count: 34 },
+  { text: 'Momentos', count: 29 },
+  { text: 'Conexão', count: 26 },
+  { text: 'Coração', count: 30 },
+  { text: 'Eterno', count: 16 },
+  { text: 'Compromisso', count: 14 },
+  { text: 'Almoço', count: 12 },
+  { text: 'Filme', count: 23 },
+  { text: 'Netflix', count: 19 },
+  { text: 'Bom dia', count: 40 },
+  { text: 'Boa noite', count: 38 },
+  { text: 'Presente', count: 13 },
+  { text: 'Chamego', count: 18 },
+  { text: 'Música', count: 20 },
+  { text: 'Parabéns', count: 11 },
+  { text: 'Saúde', count: 9 },
+  { text: 'Planos', count: 14 },
+  { text: 'Casamento', count: 8 },
+  { text: 'Filhos', count: 7 },
 ];
 
 const chartData = [
@@ -101,7 +101,15 @@ export function Why() {
         <WordCloud words={words} />
       </Widget>
 
-      <InfoCard width={2} height={1} title="Quantas mensagens cada um mandou" />
+      <InfoCard
+        info={[
+          { author: 'Você', count: 5210 },
+          { author: 'Seu amor', count: 5223 },
+        ]}
+        width={2}
+        height={1}
+        title="Quantas mensagens cada um mandou"
+      />
     </div>
   );
 }
