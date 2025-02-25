@@ -17,10 +17,24 @@ export interface AnalyzedData {
   activityByDay: { day: string; count: number }[];
   frequentWords: { word: string; count: number }[];
   laughs: { author: string; count: number }[];
+  messagesPerPersonPerMonth: { [key: string]: number | string }[];
+  averageResponseTime: { author: string; avgTime: number }[];
+  commonNGrams: { author: string; ngrams: { phrase: string; count: number }[] }[];
+  messagesPerDayOfWeek: { day: string; count: number }[];
+  emojisPerPerson: { author: string; emojis: { emoji: string; count: number }[] }[];
+  conversationStarters: { author: string; count: number }[];
+  
 }
 
 export class AnalyzeWhatsApp {
   private messages: ChatMessage[];
+
+
+  // Todos os dados são retornados assim com n valores e x items
+  // [{"mes":01/20, "vitor":34922, "Rafa":29031},
+  //  {"mes":02/20, "vitor":28047, "Rafa":12042},
+  //  ...]
+
 
   constructor(textContent: string) {
     this.messages = this.parseWhatsAppContent(textContent);
@@ -328,4 +342,216 @@ export class AnalyzeWhatsApp {
       laugh_length_k: data.countK ? data.totalK / data.countK : 0,
     }));
   }
+  public messagesPerPersonPerMonth(): { month: string; [author: string]: number | string }[] {
+    const monthlyData: { [month: string]: { [author: string]: number } } = {};
+    
+    this.messages.forEach((msg) => {
+      const year = msg.datetime.getFullYear();
+      const month = (msg.datetime.getMonth() + 1).toString().padStart(2, '0');
+      const key = `${year}-${month}`;
+      const author = msg.author;
+      
+      if (!monthlyData[key]) {
+        monthlyData[key] = {};
+      }
+      
+      monthlyData[key][author] = (monthlyData[key][author] || 0) + 1;
+    });
+    
+    // Convert to array of objects
+    return Object.entries(monthlyData)
+      .sort(([monthA], [monthB]) => monthA.localeCompare(monthB))
+      .map(([month, authorCounts]) => {
+        return { month, ...authorCounts };
+      });
+  }
+  
+  // Average response time per person (in seconds)
+  public averageResponseTime(): { author: string; avgTime: number }[] {
+    const responseTimes: { [author: string]: number[] } = {};
+    const sortedMessages = [...this.messages].sort((a, b) => 
+      a.datetime.getTime() - b.datetime.getTime()
+    );
+    
+    // Calculate response times
+    for (let i = 1; i < sortedMessages.length; i++) {
+      const currentMsg = sortedMessages[i];
+      const prevMsg = sortedMessages[i - 1];
+      
+      // Only consider responses between different authors
+      if (currentMsg.author !== prevMsg.author) {
+        const timeDiff = (currentMsg.datetime.getTime() - prevMsg.datetime.getTime()) / 1000; // in seconds
+        
+        // Filter out unreasonably long response times (e.g., > 24 hours)
+        if (timeDiff <= 86400) {
+          if (!responseTimes[currentMsg.author]) {
+            responseTimes[currentMsg.author] = [];
+          }
+          responseTimes[currentMsg.author].push(timeDiff);
+        }
+      }
+    }
+    
+    // Calculate average response time for each author
+    return Object.entries(responseTimes).map(([author, times]) => {
+      const avgTime = times.length ? times.reduce((sum, time) => sum + time, 0) / times.length : 0;
+      return { author, avgTime };
+    });
+  }
+  
+  // Helper function to extract N-grams from text
+  private extractNGrams(text: string, n: number): string[] {
+    const words = text.toLowerCase()
+      .replace(/[?!\,\.]/g, '')
+      .split(' ')
+      .filter(Boolean);
+    
+    const ngrams: string[] = [];
+    for (let i = 0; i <= words.length - n; i++) {
+      ngrams.push(words.slice(i, i + n).join(' '));
+    }
+    
+    return ngrams;
+  }
+  
+  // Most common n-gram phrases per person and overall
+  public commonNGrams(n: number = 2, top: number = 10): { 
+    author: string; 
+    ngrams: { phrase: string; count: number }[] 
+  }[] {
+    const authorNGrams: { [author: string]: { [phrase: string]: number } } = {};
+    const overallNGrams: { [phrase: string]: number } = {};
+    
+    // Calculate for each author and overall
+    this.messages.forEach((msg) => {
+      const ngrams = this.extractNGrams(msg.message, n);
+      
+      // Initialize author entry if not exists
+      if (!authorNGrams[msg.author]) {
+        authorNGrams[msg.author] = {};
+      }
+      
+      // Count n-grams
+      ngrams.forEach(phrase => {
+        authorNGrams[msg.author][phrase] = (authorNGrams[msg.author][phrase] || 0) + 1;
+        overallNGrams[phrase] = (overallNGrams[phrase] || 0) + 1;
+      });
+    });
+    
+    // Process results for each author
+    const results = Object.entries(authorNGrams).map(([author, phrases]) => {
+      const sortedPhrases = Object.entries(phrases)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, top)
+        .map(([phrase, count]) => ({ phrase, count }));
+      
+      return { author, ngrams: sortedPhrases };
+    });
+    
+    // Add overall results
+    const overallSorted = Object.entries(overallNGrams)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, top)
+      .map(([phrase, count]) => ({ phrase, count }));
+    
+    results.push({ author: 'Overall', ngrams: overallSorted });
+    
+    return results;
+  }
+  
+  // Most used emojis per person
+  public mostUsedEmojis(): { author: string; emojis: { emoji: string; count: number }[] }[] {
+    const authorEmojis: { [author: string]: { [emoji: string]: number } } = {};
+    
+    // Regex to match emojis
+    const emojiRegex = /[\u{1F300}-\u{1F6FF}\u{1F900}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu;
+    
+    this.messages.forEach((msg) => {
+      const emojis = msg.message.match(emojiRegex) || [];
+      
+      if (!authorEmojis[msg.author]) {
+        authorEmojis[msg.author] = {};
+      }
+      
+      emojis.forEach(emoji => {
+        authorEmojis[msg.author][emoji] = (authorEmojis[msg.author][emoji] || 0) + 1;
+      });
+    });
+    
+    // Convert to desired output format
+    return Object.entries(authorEmojis).map(([author, emojiCounts]) => {
+      const sortedEmojis = Object.entries(emojiCounts)
+        .sort((a, b) => b[1] - a[1])
+        .map(([emoji, count]) => ({ emoji, count }));
+      
+      return { author, emojis: sortedEmojis };
+    });
+  }
+  
+  // Who starts more conversations
+  public conversationStarters(timeThreshold: number = 3600): { author: string; count: number }[] {
+    const starters: { [author: string]: number } = {};
+    const sortedMessages = [...this.messages].sort((a, b) => 
+      a.datetime.getTime() - b.datetime.getTime()
+    );
+    
+    let lastMessageTime = new Date(0); // Initialize with epoch time
+    
+    sortedMessages.forEach((msg) => {
+      // If more than timeThreshold seconds since the last message, consider it a new conversation
+      const timeSinceLastMessage = (msg.datetime.getTime() - lastMessageTime.getTime()) / 1000;
+      if (timeSinceLastMessage > timeThreshold) {
+        starters[msg.author] = (starters[msg.author] || 0) + 1;
+      }
+      
+      lastMessageTime = msg.datetime;
+    });
+    
+    return Object.entries(starters)
+      .sort((a, b) => b[1] - a[1])
+      .map(([author, count]) => ({ author, count }));
+  }
+  
+  // Enhanced version of laughsPerAuthor with more laugh patterns
+  public enhancedLaughsPerAuthor(): { author: string; count: number }[] {
+    const counts: { [author: string]: number } = {};
+    
+    this.messages.forEach((msg) => {
+      // Match both 'hahaha', 'kkk', and other common laugh patterns
+      const haMatches = msg.message.match(/(?:ha){2,}/gi);
+      const kMatches = msg.message.match(/k{3,}/gi);
+      const lolMatches = msg.message.match(/(?:lo+l|lma+o|rofl)/gi);
+      const rsMatches = msg.message.match(/(?:rs+|hue+|heh+)/gi);
+      
+      const count = 
+        (haMatches ? haMatches.length : 0) + 
+        (kMatches ? kMatches.length : 0) +
+        (lolMatches ? lolMatches.length : 0) +
+        (rsMatches ? rsMatches.length : 0);
+      
+      counts[msg.author] = (counts[msg.author] || 0) + count;
+    });
+    
+    return this.jsonize(counts, ['author', 'count']);
+  }
+  
+  // Comprehensive analysis method that returns all data
+  public analyze(): AnalyzedData {
+    return {
+      totalMessages: this.messagesCount(),
+      messagesPerMonth: this.messageCountPerMonth(),
+      messagesPerAuthor: this.messageCountPerAuthor(),
+      activityByHour: this.activityTimeOfDay(),
+      activityByDay: this.activityDayOfWeek(),
+      frequentWords: this.mostFreqWords(),
+      laughs: this.enhancedLaughsPerAuthor(),
+      messagesPerPersonPerMonth: this.messagesPerPersonPerMonth(),
+      averageResponseTime: this.averageResponseTime(),
+      commonNGrams: this.commonNGrams(2, 10), // Bigrams by default
+      messagesPerDayOfWeek: this.activityDayOfWeek(),
+      emojisPerPerson: this.mostUsedEmojis(),
+      conversationStarters: this.conversationStarters()
+    };
+  }
+  
 }
