@@ -28,6 +28,12 @@ export default function Wrapped() {
         const activityByDay = analyzer.activityDayOfWeek();
         const frequentWords = analyzer.mostFreqWords();
         const laughs = analyzer.laughsPerAuthor();
+        const messagesPerPersonPerMonth = analyzer.messagesPerPersonPerMonth();
+        const averageResponseTime = analyzer.averageResponseTime();
+        const commonNGrams = analyzer.commonNGrams();
+        const messagesPerDayOfWeek = analyzer.activityDayOfWeek();
+        const emojisPerPerson = analyzer.mostUsedEmojis();
+        const conversationStarters = analyzer.conversationStarters();
 
         // Agrupa os dados em um objeto
         setAnalyzedData({
@@ -38,6 +44,12 @@ export default function Wrapped() {
           activityByDay,
           frequentWords,
           laughs,
+          messagesPerPersonPerMonth,
+          averageResponseTime,
+          commonNGrams,
+          messagesPerDayOfWeek,
+          emojisPerPerson,
+          conversationStarters,
         });
       } catch (error) {
         console.error('Erro ao analisar a conversa:', error);
