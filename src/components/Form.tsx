@@ -184,7 +184,15 @@ export function Form() {
           </Button>
         </PopoverTrigger>
         <PopoverContent className="p-0 w-auto">
-          <Calendar mode="single" selected={date} onSelect={setDate} />
+          <Calendar
+            mode="single"
+            selected={date}
+            onSelect={setDate}
+            disabled={(date) =>
+              date > new Date() || date < new Date('1900-01-01')
+            }
+            initialFocus
+          />
         </PopoverContent>
       </Popover>
       {error && <p className="text-red-500">{error}</p>}

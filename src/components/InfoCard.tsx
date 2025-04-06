@@ -5,10 +5,7 @@ interface InfoCardProps {
   info: { author: string; count: number }[];
 }
 
-// Função para gerar uma cor aleatória em tons pastel
-
 export function InfoCard({ title, width, height, info }: InfoCardProps) {
-  console.log(info);
   const getRandomColor = () => {
     const colors = [
       { bg: 'bg-red-200', text: 'text-red-700', subtext: 'text-red-600' },

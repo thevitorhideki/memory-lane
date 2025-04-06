@@ -74,7 +74,7 @@ export function Why() {
       className="mt-8 w-full grid gap-6 justify-center"
       style={{
         gridTemplateColumns: 'repeat(6, 175px)',
-        gridTemplateRows: 'repeat(4, auto)',
+        gridTemplateRows: 'repeat(4, 175px)',
       }}
     >
       <Widget width={3} height={2} title="Mensagens por mês">

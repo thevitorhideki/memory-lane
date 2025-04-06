@@ -55,10 +55,12 @@ export default function Wrapped() {
 
   return (
     <main>
-      <p>{nicknames[0]}</p>
-      <p>{nicknames[1]}</p>
+      <header>
+        <p>{nicknames[0]}</p>
+        <p>{nicknames[1]}</p>
 
-      <Counter />
+        <Counter />
+      </header>
 
       <section
         className="mt-8 w-full grid gap-6 justify-center"
@@ -67,7 +69,7 @@ export default function Wrapped() {
           gridTemplateRows: 'repeat(4, 175px)',
         }}
       >
-        <Widget width={3} height={2} title="Palavras mais faladas">
+        <Widget width={4} height={2} title="Palavras mais faladas">
           <WordCloud
             words={analyzedData.frequentWords
               .slice(0, 80)
