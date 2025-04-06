@@ -1,3 +1,4 @@
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import type { Metadata } from 'next';
 import { Inter, Source_Serif_4 } from 'next/font/google';
 import './globals.css';
@@ -28,6 +29,7 @@ export default function RootLayout({
         className={`${sourceSerif.variable} ${interSans.variable} antialiased`}
       >
         {children}
+        <SpeedInsights />
       </body>
     </html>
   );
