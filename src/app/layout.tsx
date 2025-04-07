@@ -1,16 +1,19 @@
+import { AuthProvider } from '@/context/AuthContext';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import type { Metadata } from 'next';
 import { Inter, Source_Serif_4 } from 'next/font/google';
 import './globals.css';
 
 const sourceSerif = Source_Serif_4({
-  variable: '--font-source-serif',
   subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-source-serif',
 });
 
 const interSans = Inter({
-  variable: '--font-inter-sans',
   subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
 });
 
 export const metadata: Metadata = {
@@ -24,12 +27,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${sourceSerif.variable} ${interSans.variable} antialiased`}
-      >
-        {children}
-        <SpeedInsights />
+    <html lang="en" className={`${sourceSerif.variable} ${interSans.variable}`}>
+      <body className="antialiased">
+        <AuthProvider>
+          {children}
+          <SpeedInsights />
+        </AuthProvider>
       </body>
     </html>
   );

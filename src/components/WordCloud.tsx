@@ -61,7 +61,7 @@ export function WordCloud({ words }: WordCloudProps) {
   };
 
   return (
-    <div className="flex flex-wrap gap-2 justify-center h-full items-center">
+    <div className="flex h-full flex-wrap items-center justify-center gap-2">
       {orderedWords.map((word) => (
         <TooltipProvider key={word.text}>
           <Tooltip delayDuration={0}>

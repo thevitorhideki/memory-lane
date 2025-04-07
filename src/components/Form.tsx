@@ -1,32 +1,30 @@
 'use client';
 
-import { cn } from '@/lib/utils';
+import { useAuth } from '@/context/AuthContext';
 import { useCoupleStore } from '@/store/chatStore';
-import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
 import JSZip from 'jszip';
-import { CalendarIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
-import { AnalyzeWhatsApp } from '../utils/analyzeWhatsApp'; // adjust the path as needed
+import { AnalyzeWhatsApp } from '../utils/analyzeWhatsApp';
 import { Button } from './ui/button';
-import { Calendar } from './ui/calendar';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
-import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 
 export function Form() {
+  const { user } = useAuth();
   const [error, setError] = useState('');
   const [messageCount, setMessageCount] = useState(0);
   const [chatText, setChatText] = useState('');
-  const [date, setDate] = useState<Date | undefined>();
-  const [firstNickname, setFirstNickname] = useState('');
-  const [secondNickname, setSecondNickname] = useState('');
-  const { setChatData, setNicknames, setStartDate } = useCoupleStore();
+  // const [dateValue, setDateValue] = useState('');
+  // const [dateObject, setDateObject] = useState<Date | null>(null);
+  // const [isDateValid, setIsDateValid] = useState(true);
+  // const [firstNickname, setFirstNickname] = useState('');
+  // const [secondNickname, setSecondNickname] = useState('');
+  const { setChatData } = useCoupleStore();
   const router = useRouter();
 
   const handleFileChange = async (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -39,7 +37,7 @@ export function Form() {
       readZipFile(file);
     } else {
       setError(
-        'Formato de arquivo inválido. Envie um .txt ou .zip contendo um arquivo .txt.'
+        'Formato de arquivo inválido. Envie um .txt ou .zip contendo um arquivo .txt.',
       );
     }
   };
@@ -78,7 +76,7 @@ export function Form() {
     try {
       const zip = await JSZip.loadAsync(file);
       const txtFileName = Object.keys(zip.files).find((name) =>
-        name.endsWith('.txt')
+        name.endsWith('.txt'),
       );
 
       if (!txtFileName) {
@@ -109,108 +107,121 @@ export function Form() {
     }
   };
 
-  const handleSubmitChat = () => {
-    setChatData(chatText);
-    setNicknames([firstNickname, secondNickname]);
-    setStartDate(date);
+  // const handleDateChange = (
+  //   value: string,
+  //   dateObj: Date | null,
+  //   isValid: boolean,
+  // ) => {
+  //   setDateValue(value);
+  //   setDateObject(dateObj);
+  //   setIsDateValid(isValid);
+  // };
 
-    router.push('/wrapped');
+  const handleSubmitChat = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (
+      // isDateValid &&
+      // firstNickname &&
+      // secondNickname &&
+      // dateObject &&
+      chatText
+    ) {
+      setChatData(chatText);
+      // setNicknames([firstNickname, secondNickname]);
+      // setStartDate(dateObject);
+
+      router.push('/sign-up');
+    }
   };
 
   return (
-    <div className="flex flex-col gap-2 w-1/3">
-      <h2 className="text-3xl text-center">
-        Coloque a sua conversa do
-        <br />
-        <b className="text-green-500">WhatsApp</b> para continuar
-      </h2>
-      <div className="flex gap-6 self-center">
-        <a href="#why" className="hover:underline">
-          Por que?
-        </a>
-        <a href="#how" className="hover:underline">
-          Como?
-        </a>
-      </div>
-      <Label htmlFor="chat" className="font-bold">
-        Sua conversa
-      </Label>
-      <Input
-        id="chat"
-        type="file"
-        accept=".zip,.txt"
-        className="border-dashed border-2"
-        onChange={handleFileChange}
-      />
-      <Label htmlFor="yourNickname" className="font-bold">
-        Seu apelido
-      </Label>
-      <Input
-        id="yourNickname"
-        placeholder="Escreva seu apelido carinhoso"
-        value={firstNickname}
-        onChange={(e) => setFirstNickname(e.target.value)}
-      />
-      <Label htmlFor="theirNickname" className="font-bold">
-        Apelido do seu amor
-      </Label>
-      <Input
-        id="theirNickname"
-        value={secondNickname}
-        onChange={(e) => setSecondNickname(e.target.value)}
-        placeholder="Escreva o apelido carinhoso do seu amor"
-      />
-
-      <Label htmlFor="theirNickname" className="font-bold">
-        Que dia começou o amor?
-      </Label>
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button
-            variant={'outline'}
-            className={cn(
-              'justify-start text-left font-normal',
-              !date && 'text-muted-foreground'
-            )}
+    <div className="flex w-full flex-col gap-2 px-4 lg:w-1/3">
+      {user ? (
+        <>
+          <p className="text-center text-xl font-bold">
+            Seja bem vindo de volta! Vamos para a sua página!
+          </p>
+          <a
+            className="cursor-pointer rounded-3xl border-2 p-2 text-center"
+            href="/wrapped"
           >
-            <CalendarIcon />
-            {date ? (
-              format(date, "dd 'de' MMMM 'de' yyyy", {
-                locale: ptBR,
-              })
-            ) : (
-              <span>Escolha uma data</span>
+            Clique aqui
+          </a>
+        </>
+      ) : (
+        <>
+          <h2 className="text-center text-3xl">
+            Coloque a sua conversa do <b className="text-green-500">WhatsApp</b>{' '}
+            para continuar
+          </h2>
+          <div className="flex gap-6 self-center">
+            <a href="#why" className="hover:underline">
+              Por que?
+            </a>
+            <a href="#how" className="hover:underline">
+              Como?
+            </a>
+          </div>
+
+          <form onSubmit={handleSubmitChat} className="flex flex-col gap-2">
+            <Label htmlFor="chat" className="font-bold">
+              Sua conversa
+            </Label>
+            <Input
+              id="chat"
+              type="file"
+              accept=".zip,.txt"
+              className="border-2 border-dashed"
+              onChange={handleFileChange}
+            />
+
+            {/* <Label htmlFor="yourNickname" className="font-bold">
+          Seu apelido
+        </Label>
+        <Input
+          id="yourNickname"
+          placeholder="Escreva seu apelido carinhoso"
+          value={firstNickname}
+          onChange={(e) => setFirstNickname(e.target.value)}
+        />
+        
+        <Label htmlFor="theirNickname" className="font-bold">
+          Apelido do seu amor
+        </Label>
+        <Input
+          id="theirNickname"
+          value={secondNickname}
+          onChange={(e) => setSecondNickname(e.target.value)}
+          placeholder="Escreva o apelido carinhoso do seu amor"
+        />
+
+        <Label htmlFor="date" className="font-bold">
+          Que dia começou o amor?
+        </Label>
+        <DatePicker value={dateValue} onChange={handleDateChange} /> */}
+
+            {error && <p className="text-red-500">{error}</p>}
+            {messageCount != 0 && (
+              <div className="w-full text-center">
+                <span className="mt-4 text-2xl font-bold">
+                  {messageCount} Mensagens analisadas
+                </span>
+              </div>
             )}
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="p-0 w-auto">
-          <Calendar
-            mode="single"
-            selected={date}
-            onSelect={setDate}
-            disabled={(date) =>
-              date > new Date() || date < new Date('1900-01-01')
-            }
-            initialFocus
-          />
-        </PopoverContent>
-      </Popover>
-      {error && <p className="text-red-500">{error}</p>}
-      {messageCount != 0 && (
-        <div className="text-center w-full">
-          <span className="font-bold text-2xl mt-4">
-            {messageCount} Mensagens analisadas
-          </span>
-        </div>
+            <Button
+              variant="outline"
+              disabled={
+                !messageCount
+                // || !firstNickname || !secondNickname || !isDateValid
+              }
+              className="cursor-pointer rounded-3xl border-2 p-4"
+            >
+              Continuar
+            </Button>
+          </form>
+        </>
       )}
-      <Button
-        variant="outline"
-        disabled={!messageCount || !firstNickname || !secondNickname || !date}
-        className="border-2 p-4 rounded-3xl cursor-pointer"
-        onClick={handleSubmitChat}
-      >
-        Continuar
-      </Button>
     </div>
   );
 }

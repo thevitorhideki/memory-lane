@@ -29,12 +29,8 @@ export function How() {
   };
 
   return (
-    <section
-      id="how"
-      className="flex flex-col items-center w-full h-screen relative"
-    >
-      <h1 className="text-4xl mt-10">Como baixar o histórico da conversa</h1>
-      <div className="flex gap-8 text-xl mt-6">
+    <>
+      <div className="mt-6 flex gap-8 text-xl">
         <p
           onClick={() => setMobileType('ios')}
           className={clsx('cursor-pointer', {
@@ -54,26 +50,26 @@ export function How() {
       </div>
 
       {mobileType == 'ios' ? (
-        <div className="flex flex-1 w-full justify-center gap-8 my-20">
+        <div className="my-20 flex w-full flex-1 justify-center gap-8">
           {step == 0 && (
             <>
-              <div className="flex-1 flex justify-end">
+              <div className="flex flex-1 justify-end">
                 <div
-                  className="border-2 h-full w-80 p-6 bg-zinc-100 rounded-3xl flex flex-col gap-4"
+                  className="flex h-full w-80 flex-col gap-4 rounded-3xl border-2 bg-zinc-100 p-6"
                   style={{
                     boxShadow: 'rgba(139, 139, 139, 0.35) 0px 0px 5px',
                   }}
                 >
                   <p className="font-bold">WhatsApp</p>
-                  <div className="border-2 w-full py-2 px-4 rounded-full text-sm h-8"></div>
-                  <div className="flex items-center gap-3 w-full">
-                    <div className="rounded-full bg-zinc-500 min-w-8 min-h-8"></div>
+                  <div className="h-8 w-full rounded-full border-2 px-4 py-2 text-sm"></div>
+                  <div className="flex w-full items-center gap-3">
+                    <div className="min-h-8 min-w-8 rounded-full bg-zinc-500"></div>
                     <div className="w-full">
-                      <div className="flex w-full justify-between items-center">
+                      <div className="flex w-full items-center justify-between">
                         <p>Amor ❤️</p>
-                        <p className="text-zinc-500 text-xs">Agora</p>
+                        <p className="text-xs text-zinc-500">Agora</p>
                       </div>
-                      <div className="flex gap-1 items-center">
+                      <div className="flex items-center gap-1">
                         <CheckCheck size={14} />
                         <p className="text-xs">
                           Vou fazer uma surpresa para você ;)
@@ -84,7 +80,7 @@ export function How() {
                 </div>
               </div>
 
-              <div className="flex gap-2 items-center self-start flex-1">
+              <div className="flex flex-1 items-center gap-2 self-start">
                 <ArrowLeft />
                 <h2 className="text-xl">
                   Entre na conversa com o seu{' '}
@@ -95,26 +91,26 @@ export function How() {
           )}
           {step == 1 && (
             <>
-              <div className="flex-1 flex justify-end">
+              <div className="flex flex-1 justify-end">
                 <div
-                  className="border-2 h-full w-80 p-6 rounded-3xl flex flex-col gap-4 bg-zinc-100 justify-between"
+                  className="flex h-full w-80 flex-col justify-between gap-4 rounded-3xl border-2 bg-zinc-100 p-6"
                   style={{
                     boxShadow: 'rgba(139, 139, 139, 0.35) 0px 0px 5px',
                   }}
                 >
                   <div className="flex items-center gap-3">
-                    <div className="rounded-full bg-zinc-500 min-w-8 min-h-8"></div>
+                    <div className="min-h-8 min-w-8 rounded-full bg-zinc-500"></div>
                     <p className="font-bold">Amor ❤️</p>
                   </div>
 
-                  <div className="bg-zinc-50 rounded-md px-4 py-2">
+                  <div className="rounded-md bg-zinc-50 px-4 py-2">
                     <p className="text-green-500">Exportar conversa</p>
                   </div>
                 </div>
               </div>
 
-              <div className="flex flex-col gap-6 self-start flex-1">
-                <div className="flex gap-2 items-center">
+              <div className="flex flex-1 flex-col gap-6 self-start">
+                <div className="flex items-center gap-2">
                   <ArrowLeft />
                   <h2 className="text-xl">
                     Clique no nome do seu <b className="text-red-500">amor</b>
@@ -140,24 +136,24 @@ export function How() {
           )}
           {step == 2 && (
             <>
-              <div className="flex-1 flex justify-end">
+              <div className="flex flex-1 justify-end">
                 <div
-                  className="border-2 h-full w-80 p-6 bg-zinc-100 rounded-3xl flex flex-col gap-4"
+                  className="flex h-full w-80 flex-col gap-4 rounded-3xl border-2 bg-zinc-100 p-6"
                   style={{
                     boxShadow: 'rgba(139, 139, 139, 0.35) 0px 0px 5px',
                   }}
                 >
-                  <div className="flex items-center justify-between w-full">
+                  <div className="flex w-full items-center justify-between">
                     <h2 className="font-bold">Enviar para...</h2>
                     <Search size={20} />
                   </div>
                 </div>
               </div>
 
-              <div className="flex flex-col gap-6 self-start flex-1">
-                <div className="flex gap-2 items-center">
+              <div className="flex flex-1 flex-col gap-6 self-start">
+                <div className="flex items-center gap-2">
                   <ArrowLeft />
-                  <h2 className="text-xl flex items-center gap-2">
+                  <h2 className="flex items-center gap-2 text-xl">
                     Clique na
                     <Search size={20} />e pesquise por: <b>você</b>
                   </h2>
@@ -171,8 +167,8 @@ export function How() {
             </>
           )}
           {step == 3 && (
-            <div className="flex flex-1 justify-center items-center">
-              <h1 className="text-4xl w-3/5 text-center">
+            <div className="flex flex-1 items-center justify-center">
+              <h1 className="w-3/5 text-center text-4xl">
                 Agora basta entrar no seu{' '}
                 <b className="text-green-500">WhatsApp</b> pelo computador e
                 baixar o arquivo que você enviou
@@ -181,26 +177,26 @@ export function How() {
           )}
         </div>
       ) : (
-        <div className="flex flex-1 w-full justify-center gap-8 my-20">
+        <div className="my-20 flex w-full flex-1 justify-center gap-8">
           {step == 0 && (
             <>
-              <div className="flex-1 flex justify-end">
+              <div className="flex flex-1 justify-end">
                 <div
-                  className="border-2 h-full w-80 p-6 bg-zinc-100 rounded-3xl flex flex-col gap-4"
+                  className="flex h-full w-80 flex-col gap-4 rounded-3xl border-2 bg-zinc-100 p-6"
                   style={{
                     boxShadow: 'rgba(139, 139, 139, 0.35) 0px 0px 5px',
                   }}
                 >
                   <p className="font-bold">WhatsApp</p>
-                  <div className="border-2 w-full py-2 px-4 rounded-full text-sm h-8"></div>
-                  <div className="flex items-center gap-3 w-full">
-                    <div className="rounded-full bg-zinc-500 min-w-8 min-h-8"></div>
+                  <div className="h-8 w-full rounded-full border-2 px-4 py-2 text-sm"></div>
+                  <div className="flex w-full items-center gap-3">
+                    <div className="min-h-8 min-w-8 rounded-full bg-zinc-500"></div>
                     <div className="w-full">
-                      <div className="flex w-full justify-between items-center">
+                      <div className="flex w-full items-center justify-between">
                         <p>Amor ❤️</p>
-                        <p className="text-zinc-500 text-xs">Agora</p>
+                        <p className="text-xs text-zinc-500">Agora</p>
                       </div>
-                      <div className="flex gap-1 items-center">
+                      <div className="flex items-center gap-1">
                         <CheckCheck size={14} />
                         <p className="text-xs">
                           Vou fazer uma surpresa para você ;)
@@ -211,7 +207,7 @@ export function How() {
                 </div>
               </div>
 
-              <div className="flex gap-2 items-center self-start flex-1">
+              <div className="flex flex-1 items-center gap-2 self-start">
                 <ArrowLeft />
                 <h2 className="text-xl">
                   Entre na conversa com o seu{' '}
@@ -222,16 +218,16 @@ export function How() {
           )}
           {step == 1 && (
             <>
-              <div className="flex-1 flex justify-end">
+              <div className="flex flex-1 justify-end">
                 <div
-                  className="border-2 h-full w-80 p-6 bg-zinc-100 rounded-3xl flex flex-col gap-4"
+                  className="flex h-full w-80 flex-col gap-4 rounded-3xl border-2 bg-zinc-100 p-6"
                   style={{
                     boxShadow: 'rgba(139, 139, 139, 0.35) 0px 0px 5px',
                   }}
                 >
-                  <div className="flex items-center justify-between w-full">
+                  <div className="flex w-full items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <div className="rounded-full bg-zinc-500 min-w-8 min-h-8"></div>
+                      <div className="min-h-8 min-w-8 rounded-full bg-zinc-500"></div>
                       <p className="font-bold">Amor ❤️</p>
                     </div>
                     <MoreVertical size={20} />
@@ -239,8 +235,8 @@ export function How() {
                 </div>
               </div>
 
-              <div className="flex flex-col gap-6 self-start flex-1">
-                <div className="flex gap-2 items-center">
+              <div className="flex flex-1 flex-col gap-6 self-start">
+                <div className="flex items-center gap-2">
                   <ArrowLeft />
                   <h2 className="text-xl">Clique no ícone</h2>
                   <MoreVertical size={20} />
@@ -265,24 +261,24 @@ export function How() {
           )}
           {step == 2 && (
             <>
-              <div className="flex-1 flex justify-end">
+              <div className="flex flex-1 justify-end">
                 <div
-                  className="border-2 h-full w-80 p-6 bg-zinc-100 rounded-3xl flex flex-col gap-4"
+                  className="flex h-full w-80 flex-col gap-4 rounded-3xl border-2 bg-zinc-100 p-6"
                   style={{
                     boxShadow: 'rgba(139, 139, 139, 0.35) 0px 0px 5px',
                   }}
                 >
-                  <div className="flex items-center justify-between w-full">
+                  <div className="flex w-full items-center justify-between">
                     <h2 className="font-bold">Enviar para...</h2>
                     <Search size={20} />
                   </div>
                 </div>
               </div>
 
-              <div className="flex flex-col gap-6 self-start flex-1">
-                <div className="flex gap-2 items-center">
+              <div className="flex flex-1 flex-col gap-6 self-start">
+                <div className="flex items-center gap-2">
                   <ArrowLeft />
-                  <h2 className="text-xl flex items-center gap-2">
+                  <h2 className="flex items-center gap-2 text-xl">
                     Clique na
                     <Search size={20} />e pesquise por: <b>você</b>
                   </h2>
@@ -296,8 +292,8 @@ export function How() {
             </>
           )}
           {step == 3 && (
-            <div className="flex flex-1 justify-center items-center">
-              <h1 className="text-4xl w-3/5 text-center">
+            <div className="flex flex-1 items-center justify-center">
+              <h1 className="w-3/5 text-center text-4xl">
                 Agora basta entrar no seu{' '}
                 <b className="text-green-500">WhatsApp</b> pelo computador e
                 baixar o arquivo que você enviou
@@ -307,7 +303,7 @@ export function How() {
         </div>
       )}
 
-      <div className="absolute right-10 top-1/2 -translate-y-1/2 gap-3 flex flex-col">
+      <div className="absolute top-1/2 right-10 flex -translate-y-1/2 flex-col gap-3">
         <ArrowUpCircle
           size={28}
           onClick={handlePreviousStep}
@@ -319,6 +315,6 @@ export function How() {
           color={step == 3 ? 'transparent' : 'black'}
         />
       </div>
-    </section>
+    </>
   );
 }

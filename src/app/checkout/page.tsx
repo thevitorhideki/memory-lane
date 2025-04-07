@@ -1,11 +1,25 @@
 'use client';
 
+import { useAuth } from '@/context/AuthContext';
 import useMercadoPago from '@/hooks/useMercadoPago';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 export default function Checkout() {
+  const { user, loading } = useAuth();
+  const router = useRouter();
   const { createMercadoPagoCheckout } = useMercadoPago();
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push('/sign-in');
+    }
+  }, [user, loading]);
+
+  if (loading || !user) return null;
+
   return (
-    <div className="flex justify-center items-center h-screen">
+    <div className="flex h-screen items-center justify-center">
       <button
         onClick={() =>
           createMercadoPagoCheckout({
@@ -13,7 +27,7 @@ export default function Checkout() {
             userEmail: 'memorylanetest@gmail.com',
           })
         }
-        className="bg-blue-500 text-white px-4 py-2 rounded-md"
+        className="rounded-md bg-blue-500 px-4 py-2 text-white"
       >
         Comprar
       </button>

@@ -59,7 +59,7 @@ export default function Wrapped() {
 
   if (!chatData || !analyzedData) {
     return (
-      <div className="w-full h-screen flex justify-center items-center">
+      <div className="flex h-screen w-full items-center justify-center">
         Carregando análise...
       </div>
     );
@@ -75,7 +75,7 @@ export default function Wrapped() {
       </header>
 
       <section
-        className="mt-8 w-full grid gap-6 justify-center"
+        className="mt-8 grid w-full justify-center gap-6"
         style={{
           gridTemplateColumns: 'repeat(6, 175px)',
           gridTemplateRows: 'repeat(4, 175px)',

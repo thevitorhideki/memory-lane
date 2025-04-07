@@ -71,10 +71,10 @@ const chartConfig = {
 export function Why() {
   return (
     <div
-      className="mt-8 w-full grid gap-6 justify-center"
+      className="mt-8 grid w-full justify-center gap-6"
       style={{
-        gridTemplateColumns: 'repeat(6, 175px)',
-        gridTemplateRows: 'repeat(4, 175px)',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(175px, 1fr))',
+        gridTemplateRows: '175px',
       }}
     >
       <Widget width={3} height={2} title="Mensagens por mês">
