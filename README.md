@@ -2,6 +2,4 @@
 
 ## To-do
 
-- [ ] Colocar animações nos textos
-- [ ] Adicionar gráficos exemplo na segunda sessão
-- [ ] Receber e tratar os dados do usuário
+- [ ] Colocar os dados da conversa no firebase e relacionar com o usuário autenticado

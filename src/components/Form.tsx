@@ -137,19 +137,7 @@ export function Form() {
 
   return (
     <div className="flex w-full flex-col gap-2 px-4 lg:w-1/3">
-      {user ? (
-        <>
-          <p className="text-center text-xl font-bold">
-            Seja bem vindo de volta! Vamos para a sua página!
-          </p>
-          <a
-            className="cursor-pointer rounded-3xl border-2 p-2 text-center"
-            href="/wrapped"
-          >
-            Clique aqui
-          </a>
-        </>
-      ) : (
+      {!user && (
         <>
           <h2 className="text-center text-3xl">
             Coloque a sua conversa do <b className="text-green-500">WhatsApp</b>{' '}

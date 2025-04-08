@@ -71,13 +71,12 @@ const chartConfig = {
 export function Why() {
   return (
     <div
-      className="mt-8 grid w-full justify-center gap-6"
+      className="mt-8 grid w-full grid-cols-2 items-baseline justify-center gap-3"
       style={{
-        gridTemplateColumns: 'repeat(auto-fit, minmax(175px, 1fr))',
         gridTemplateRows: '175px',
       }}
     >
-      <Widget width={3} height={2} title="Mensagens por mês">
+      <Widget width={2} height={2} title="Mensagens por mês">
         <ChartContainer config={chartConfig} className="w-full">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart accessibilityLayer data={chartData}>
@@ -97,7 +96,7 @@ export function Why() {
         </ChartContainer>
       </Widget>
 
-      <Widget width={3} height={3} title="Palavras mais faladas">
+      <Widget width={2} height={3} title="Palavras mais faladas">
         <WordCloud words={words} />
       </Widget>
 
@@ -106,10 +105,22 @@ export function Why() {
           { author: 'Você', count: 5210 },
           { author: 'Seu amor', count: 5223 },
         ]}
-        width={2}
+        width={1}
         height={1}
         title="Quantas mensagens cada um mandou"
       />
+
+      <InfoCard
+        info={[
+          { author: 'Você', count: 5210 },
+          { author: 'Seu amor', count: 5223 },
+        ]}
+        width={1}
+        height={1}
+        title="Quem faz mais o outro rir?"
+      />
+
+      <p className="col-span-2 text-center">e muito mais...</p>
     </div>
   );
 }

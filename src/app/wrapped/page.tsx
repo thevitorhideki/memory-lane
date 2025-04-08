@@ -1,107 +1,43 @@
 'use client';
 
-import { Counter } from '@/components/Counter';
-import { InfoCard } from '@/components/InfoCard';
-import { Widget } from '@/components/Widget';
-import { WordCloud } from '@/components/WordCloud';
-import { useCoupleStore } from '@/store/chatStore';
-import { AnalyzedData, AnalyzeWhatsApp } from '@/utils/analyzeWhatsApp';
+import { useAuth } from '@/context/AuthContext';
+import { PlusSquare } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 export default function Wrapped() {
-  const { chatData, nicknames } = useCoupleStore();
+  const { user, loading } = useAuth();
   const router = useRouter();
-  const [analyzedData, setAnalyzedData] = useState<AnalyzedData | null>(null);
 
   useEffect(() => {
-    if (!chatData) {
-      router.push('/');
-    } else {
-      try {
-        const analyzer = new AnalyzeWhatsApp(chatData);
-        // Obtém os dados analisados
-        const totalMessages = analyzer.messagesCount();
-        const messagesPerMonth = analyzer.messageCountPerMonth();
-        const messagesPerAuthor = analyzer.messageCountPerAuthor();
-        const activityByHour = analyzer.activityTimeOfDay();
-        const activityByDay = analyzer.activityDayOfWeek();
-        const frequentWords = analyzer.mostFreqWords();
-        const laughs = analyzer.laughsPerAuthor();
-        const messagesPerPersonPerMonth = analyzer.messagesPerPersonPerMonth();
-        const averageResponseTime = analyzer.averageResponseTime();
-        const commonNGrams = analyzer.commonNGrams();
-        const messagesPerDayOfWeek = analyzer.activityDayOfWeek();
-        const emojisPerPerson = analyzer.mostUsedEmojis();
-        const conversationStarters = analyzer.conversationStarters();
-
-        // Agrupa os dados em um objeto
-        setAnalyzedData({
-          totalMessages,
-          messagesPerMonth,
-          messagesPerAuthor,
-          activityByHour,
-          activityByDay,
-          frequentWords,
-          laughs,
-          messagesPerPersonPerMonth,
-          averageResponseTime,
-          commonNGrams,
-          messagesPerDayOfWeek,
-          emojisPerPerson,
-          conversationStarters,
-        });
-      } catch (error) {
-        console.error('Erro ao analisar a conversa:', error);
-      }
+    if (!loading && !user) {
+      router.push('/sign-in');
     }
-  }, [router, chatData]);
+  }, [user, loading]);
 
-  if (!chatData || !analyzedData) {
-    return (
-      <div className="flex h-screen w-full items-center justify-center">
-        Carregando análise...
-      </div>
-    );
-  }
+  if (loading || !user) return null;
 
   return (
     <main>
-      <header>
-        <p>{nicknames[0]}</p>
-        <p>{nicknames[1]}</p>
-
-        <Counter />
+      <header className="border-b-2 border-b-zinc-400 p-4">
+        <h1 className="text-xl">Suas retrospectivas</h1>
       </header>
 
-      <section
-        className="mt-8 grid w-full justify-center gap-6"
-        style={{
-          gridTemplateColumns: 'repeat(6, 175px)',
-          gridTemplateRows: 'repeat(4, 175px)',
-        }}
-      >
-        <Widget width={4} height={2} title="Palavras mais faladas">
-          <WordCloud
-            words={analyzedData.frequentWords
-              .slice(0, 80)
-              .map((w) => ({ text: w.word, count: w.count }))}
-          />
-        </Widget>
+      <section className="flex flex-col gap-4 p-4">
+        <div className="rounded-xl bg-emerald-900 p-4 text-white shadow-xl">
+          <h2 className="text-xl font-bold">Aniversário de namoro</h2>
+          <div className="flex items-center justify-between">
+            <p>Histórico de 01/25 - 04/25</p>
+            <span className="rounded-full bg-white px-2 text-sm font-bold text-zinc-950">
+              Free
+            </span>
+          </div>
+        </div>
 
-        <InfoCard
-          width={2}
-          height={1}
-          title="Quantas mensagens cada um mandou"
-          info={analyzedData.messagesPerAuthor}
-        />
-
-        <InfoCard
-          width={2}
-          height={1}
-          title="Quantas vezes cada um riu"
-          info={analyzedData.laughs}
-        />
+        <div className="flex justify-between rounded-xl border-2 border-dashed border-zinc-400 p-4">
+          <h2>Crie mais memórias em breve</h2>
+          <PlusSquare size={24} />
+        </div>
       </section>
     </main>
   );

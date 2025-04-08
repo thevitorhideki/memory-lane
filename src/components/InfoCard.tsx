@@ -42,25 +42,23 @@ export function InfoCard({ title, width, height, info }: InfoCardProps) {
 
   return (
     <div
-      className={`flex flex-col gap-3 p-4 rounded-xl justify-center ${colors.bg}`}
+      className={`flex flex-col justify-center gap-3 rounded-xl p-4 ${colors.bg}`}
       style={{
         gridColumn: `span ${width}`,
         gridRow: `span ${height}`,
       }}
     >
-      <h1 className={`font-bold text-xl text-center ${colors.text}`}>
-        {title}
-      </h1>
+      <h1 className={`text-center font-bold ${colors.text}`}>{title}</h1>
 
       <div className={`flex justify-between ${colors.subtext}`}>
         <div>
-          <h2 className="text-lg">{info[0].author}</h2>
-          <p className="text-4xl font-bold">{info[0].count}</p>
+          <h2 className="text-xs">{info[0].author}</h2>
+          <p className="text-xl font-bold">{info[0].count}</p>
         </div>
 
         <div className="text-right">
-          <h2 className="text-lg">{info[1].author}</h2>
-          <p className="text-4xl font-bold">{info[1].count}</p>
+          <h2 className="text-xs">{info[1].author}</h2>
+          <p className="text-xl font-bold">{info[1].count}</p>
         </div>
       </div>
     </div>

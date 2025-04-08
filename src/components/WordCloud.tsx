@@ -40,7 +40,7 @@ export function WordCloud({ words }: WordCloudProps) {
   const getFontSize = (count: number) => {
     // Exemplo: tamanho mínimo 1rem e máximo 3rem
     if (maxcount === mincount) return 2; // evita divisão por zero
-    return 1 + ((count - mincount) / (maxcount - mincount)) * 2;
+    return 0.75 + ((count - mincount) / (maxcount - mincount)) * 2;
   };
 
   const getRandomColor = () => {

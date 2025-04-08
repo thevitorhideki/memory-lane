@@ -13,6 +13,11 @@ const eslintConfig = [
   ...compat.config({
     extends: ['prettier', 'next/core-web-vitals', 'next/typescript'],
   }),
+  {
+    rules: {
+      'react-hooks/exhaustive-deps': 'off',
+    },
+  },
 ];
 
 export default eslintConfig;
