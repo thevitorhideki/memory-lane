@@ -1,6 +1,6 @@
 'use client';
 
-import { Bar, BarChart, ResponsiveContainer, XAxis } from 'recharts';
+import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from 'recharts';
 
 import { InfoCard } from '@/components/InfoCard';
 import {
@@ -49,12 +49,12 @@ const words = [
 ];
 
 const chartData = [
-  { month: 'January', you: 186, love: 80 },
-  { month: 'February', you: 305, love: 200 },
-  { month: 'March', you: 237, love: 120 },
-  { month: 'April', you: 73, love: 190 },
-  { month: 'May', you: 209, love: 130 },
-  { month: 'June', you: 214, love: 140 },
+  { month: 'January', you: 186, love: 170 },
+  { month: 'February', you: 400, love: 420 },
+  { month: 'March', you: 237, love: 212 },
+  { month: 'April', you: 232, love: 222 },
+  { month: 'May', you: 209, love: 190 },
+  { month: 'June', you: 324, love: 300 },
 ];
 
 const chartConfig = {
@@ -86,6 +86,14 @@ export function Why() {
                 tickMargin={10}
                 axisLine={false}
                 tickFormatter={(value) => value.slice(0, 3)}
+              />
+              <YAxis
+                tickLine={false}
+                tickMargin={20}
+                axisLine={false}
+                tickFormatter={(value) => value.toString()}
+                width={50}
+                domain={[0, 'dataMax + 50']}
               />
               <ChartTooltip content={<ChartTooltipContent />} />
               <ChartLegend content={<ChartLegendContent />} />
@@ -120,7 +128,7 @@ export function Why() {
         title="Quem faz mais o outro rir?"
       />
 
-      <p className="col-span-2 text-center">e muito mais...</p>
+      <p className="col-span-2 text-center text-lg">e muito mais...</p>
     </div>
   );
 }

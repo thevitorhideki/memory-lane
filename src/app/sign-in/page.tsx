@@ -15,7 +15,7 @@ export default function SignInPage() {
     e.preventDefault();
     try {
       await login(email, password);
-      router.push('/checkout');
+      router.push('/wrapped');
     } catch {
       setError('Email ou senha inválidos');
     }

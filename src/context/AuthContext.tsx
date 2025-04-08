@@ -6,6 +6,7 @@ import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
+  User,
 } from 'firebase/auth';
 import {
   createContext,
@@ -16,7 +17,7 @@ import {
 } from 'react';
 
 type AuthContextType = {
-  user: unknown;
+  user: User | null;
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
   register: (email: string, password: string) => Promise<void>;
@@ -26,7 +27,7 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<unknown>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -46,7 +47,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     await createUserWithEmailAndPassword(auth, email, password);
   };
 
-  const logout = () => signOut(auth);
+  const logout = async () => await signOut(auth);
 
   return (
     <AuthContext.Provider value={{ user, loading, login, logout, register }}>
